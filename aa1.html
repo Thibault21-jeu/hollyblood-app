@@ -2,43 +2,181 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Scénario AA1 - HollyBlood</title>
+  <title>Scène AA1 - HollyBlood</title>
   <style>
     body {
       background-color: #0e0e0e;
-      color: white;
+      color: #ffffff;
       font-family: 'Georgia', serif;
       text-align: center;
-      padding: 40px;
+      padding: 40px 20px;
     }
-    h1 {
-      font-size: 36px;
-      margin-bottom: 20px;
+
+    #logo {
+      max-width: 260px;
+      margin-bottom: 10px;
     }
-    p {
-      font-size: 20px;
-      color: #cccccc;
+
+    .scene-id {
+      font-size: 0.9em;
+      color: #888;
+      margin-bottom: 30px;
     }
+
+    .narration {
+      font-size: 1.1em;
+      font-style: italic;
+      color: #dddddd;
+      max-width: 700px;
+      margin: 0 auto 40px auto;
+      text-align: justify;
+    }
+
     .btn {
+      padding: 14px 28px;
+      font-size: 1.1em;
       background-color: #e50914;
       color: white;
-      padding: 12px 24px;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      border-radius: 10px;
       cursor: pointer;
-      margin-top: 30px;
+      transition: background-color 0.3s, transform 0.2s;
+      font-family: 'Georgia', serif;
+      margin: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
+
     .btn:hover {
       background-color: #ff3333;
+      transform: scale(1.05);
+    }
+
+    #indiceContainer, #accusationContainer {
+      max-width: 700px;
+      margin: 20px auto;
+      padding: 20px;
+      border: 1px solid #444;
+      background-color: #1e1e1e;
+      border-radius: 10px;
+      display: none;
+      text-align: left;
+    }
+
+    .character-list, .mobile-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 20px 0;
+    }
+
+    .choice-btn {
+      background-color: #333;
+      color: white;
+      border: 1px solid #666;
+      padding: 10px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Georgia', serif;
+      font-size: 0.95em;
+      transition: background-color 0.3s;
+    }
+
+    .choice-btn:hover {
+      background-color: #e50914;
+    }
+
+    .selected {
+      background-color: #e50914 !important;
     }
   </style>
 </head>
 <body>
-  <h1>Scénario AA1</h1>
-  <p>Vous avez accédé à la scène du crime...
-     <br>Ce scénario est lié au code secret que vous avez reçu.
-  </p>
-  <button class="btn" onclick="window.location.href='index.html'">↩️ Retour à l’accueil</button>
+
+  <img src="img/logo.png" alt="HollyBlood Logo" id="logo">
+  <div class="scene-id">Scène AA1</div>
+
+  <div class="narration">
+    Une ambiance électrique règne dans les coulisses... Les projecteurs n’éclairent plus que les doutes, et le sang d’un(e) artiste a été versé. Qui, parmi vous, joue un double jeu ?
+  </div>
+
+  <button class="btn" onclick="toggleIndices()">🔎 Voir les indices</button>
+  <button class="btn" onclick="toggleAccusation()">⚠️ Accuser un joueur</button>
+
+  <div id="indiceContainer">
+    <h3>Indices disponibles :</h3>
+    <ul>
+      <li>Un accessoire manquant a été retrouvé dans les loges.</li>
+      <li>Le script du film comporte une scène étrange, rayée au feutre rouge.</li>
+      <li>Un mot de menace anonyme a été découvert, écrit sur un programme.</li>
+    </ul>
+  </div>
+
+  <div id="accusationContainer">
+    <p><strong>⚠️ Attention : une accusation met fin à la partie.</strong><br>
+    Si vous avez raison, <em>le coupable est démasqué, vous gagnez</em> et la partie s’achève.<br>
+    Mais si vous vous trompez… <em>vous êtes éliminé</em>, et le jeu continue sans vous.</p>
+
+    <h4>Quel personnage souhaitez-vous accuser ?</h4>
+    <div class="character-list">
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">L'Agent de Sécurité</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">L’Assistante de Production</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">L’Avocate des Stars</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">La Chroniqueuse Mondaine</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">La Figurante</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">La Maquilleuse de Stars</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">Le Paparazzi</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">Le Producteur</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">Le Réalisateur</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'personnage')">Le Scénariste</button>
+    </div>
+
+    <h4>Quel est, selon vous, son mobile ?</h4>
+    <div class="mobile-list">
+      <button class="choice-btn" onclick="selectChoice(this, 'mobile')">Vengeance personnelle</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'mobile')">Avidité</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'mobile')">Passion & Jalousie</button>
+      <button class="choice-btn" onclick="selectChoice(this, 'mobile')">Protection d’un secret</button>
+    </div>
+
+    <button class="btn" onclick="confirmerAccusation()">🎯 Confirmer l'accusation</button>
+  </div>
+
+  <script>
+    function toggleIndices() {
+      const box = document.getElementById("indiceContainer");
+      box.style.display = (box.style.display === "none") ? "block" : "none";
+    }
+
+    function toggleAccusation() {
+      const box = document.getElementById("accusationContainer");
+      box.style.display = (box.style.display === "none") ? "block" : "none";
+    }
+
+    function selectChoice(btn, group) {
+      const buttons = document.querySelectorAll(`.choice-btn`);
+      buttons.forEach(b => {
+        if (b.textContent === btn.textContent) {
+          b.classList.toggle('selected');
+        } else if (group === 'personnage' && b.parentElement.classList.contains('character-list')) {
+          b.classList.remove('selected');
+        } else if (group === 'mobile' && b.parentElement.classList.contains('mobile-list')) {
+          b.classList.remove('selected');
+        }
+      });
+    }
+
+    function confirmerAccusation() {
+      const selectedPerso = document.querySelector('.character-list .selected');
+      const selectedMobile = document.querySelector('.mobile-list .selected');
+
+      if (selectedPerso && selectedMobile) {
+        alert(`Vous accusez ${selectedPerso.textContent} pour le mobile : ${selectedMobile.textContent} \nL'accusation est lancée !`);
+      } else {
+        alert("Merci de sélectionner un personnage ET un mobile avant de confirmer l'accusation.");
+      }
+    }
+  </script>
+
 </body>
 </html>
