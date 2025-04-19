@@ -102,7 +102,8 @@
     function goToScenario() {
       const code = document.getElementById("inputCode").value.trim();
       if (redirectionMap[code]) {
-        window.location.href = redirectionMap[code];
+        const baseUrl = "https://thibault21-jeu.github.io/hollyblood-app/";
+        window.location.href = baseUrl + redirectionMap[code];
       } else {
         alert("Ce code ne correspond à aucun scénario.");
       }
