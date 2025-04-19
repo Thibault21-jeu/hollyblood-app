@@ -74,27 +74,22 @@
 
   <button class="btn" onclick="generateCode()">🔁 Générer un code</button>
   <button class="btn" onclick="copyCode()" id="copyButton" style="display: none;">📋 Copier le code</button>
-  <button class="btn" onclick="rejoindrePartie()" id="joinButton" style="display: none;">🎟️ Rejoindre la partie</button>
+  <button class="btn" onclick="retourAccueil()" id="backButton" style="display: none;">↩️ Retour à l’accueil</button>
 
   <div id="copyText">Partagez ce code avec les autres joueurs pour commencer la partie.</div>
 
   <input type="text" id="hiddenInput" style="position:absolute; left:-9999px; top:-9999px;">
 
   <script>
-    const codes = [ /* (ta liste de codes peut rester ici, elle est utile uniquement pour un jour la réutiliser) */ ];
+    const codes = [ /* ta liste de codes si tu veux la garder */ ];
 
     function generateCode() {
       const code = codes[Math.floor(Math.random() * codes.length)];
-      const codeContainer = document.getElementById("randomCode");
-      const copyButton = document.getElementById("copyButton");
-      const joinButton = document.getElementById("joinButton");
-      const copyText = document.getElementById("copyText");
-
-      codeContainer.innerText = code;
-      codeContainer.style.display = "inline-block";
-      copyButton.style.display = "inline-block";
-      joinButton.style.display = "inline-block";
-      copyText.style.display = "block";
+      document.getElementById("randomCode").innerText = code;
+      document.getElementById("randomCode").style.display = "inline-block";
+      document.getElementById("copyButton").style.display = "inline-block";
+      document.getElementById("backButton").style.display = "inline-block";
+      document.getElementById("copyText").style.display = "block";
     }
 
     function copyCode() {
@@ -107,7 +102,7 @@
       alert("Code copié dans le presse-papiers !");
     }
 
-    function rejoindrePartie() {
+    function retourAccueil() {
       window.location.href = "index.html";
     }
   </script>
