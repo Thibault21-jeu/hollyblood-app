@@ -12,48 +12,112 @@
       padding: 40px 20px;
     }
 
-    h2 {
-      margin-bottom: 20px;
+    #logo {
+      max-width: 320px;
+      margin-bottom: 25px;
+    }
+
+    .intro {
+      font-size: 1.2em;
+      color: #dddddd;
+      font-style: italic;
+      max-width: 600px;
+      margin: 0 auto 30px auto;
+      text-align: justify;
+    }
+
+    .ticket-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .ticket-btn {
+      width: 320px;
+      cursor: pointer;
+      transition: transform 0.2s ease-in-out;
+    }
+
+    .ticket-btn:hover {
+      transform: scale(1.02);
+    }
+
+    #codeSection {
+      margin-top: 30px;
+      display: none;
+      animation: fadeIn 0.4s ease-in-out;
+    }
+
+    #codeSection p {
+      font-size: 1.1em;
+      color: #ccc;
+      font-style: italic;
+      margin-bottom: 12px;
     }
 
     input {
-      font-size: 18px;
-      padding: 10px;
-      border-radius: 8px;
-      border: none;
-      width: 200px;
+      padding: 12px;
+      font-size: 1.1em;
+      border-radius: 10px;
+      border: 1px solid #444;
+      background-color: #1e1e1e;
+      color: white;
+      width: 240px;
       text-align: center;
     }
 
-    button {
-      padding: 10px 20px;
-      font-size: 18px;
-      background-color: #e50914;
+    .btn-valider {
+      margin-top: 20px;
+      background-color: #8B0000;
       color: white;
       border: none;
-      border-radius: 8px;
-      margin-left: 10px;
+      padding: 14px 28px;
+      font-size: 1.1em;
+      border-radius: 10px;
+      font-family: 'Georgia', serif;
       cursor: pointer;
-      transition: 0.3s;
+      transition: background-color 0.3s;
     }
 
-    button:hover {
-      background-color: #ff3333;
+    .btn-valider:hover {
+      background-color: #aa0000;
     }
 
-    p {
-      margin-top: 20px;
-      font-size: 16px;
-      color: #aaa;
+    .btn-valider:disabled {
+      background-color: #444;
+      cursor: not-allowed;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
 
-  <h2>🔍 Entrez le code du scénario</h2>
-  <input type="text" id="inputCode" placeholder="Ex: 973112" maxlength="6">
-  <button onclick="goToScenario()">Accéder au scénario</button>
-  <p>Vous devez entrer le code transmis par le premier joueur pour accéder au scénario...</p>
+  <img src="img/logo.png" alt="Logo du jeu" id="logo">
+
+  <p class="intro">
+    Le destin d’un meurtre repose entre vos mains.  
+    Le premier joueur doit cliquer sur <strong>Créer une partie</strong> pour déclencher le scénario et générer un code unique pour cette partie.  
+    Les autres protagonistes cliquent sur <strong>Rejoindre une partie</strong> et entrent ce code pour pénétrer dans l’histoire…  
+    <br><br>
+    <em>Le rideau ne se lèvera que lorsque tous les rôles auront trouvé leur interprète.</em>
+  </p>
+
+  <div class="ticket-container">
+    <img src="img/ticket-creer-partie.png" alt="Créer une partie" class="ticket-btn" onclick="window.location.href='creer-partie.html'">
+    <img src="img/ticket-rejoindre-partie.png" alt="Rejoindre une partie" class="ticket-btn" onclick="afficherSectionCode()">
+  </div>
+
+  <div id="codeSection">
+    <p>🔑 Entrez le code à 6 chiffres donné par le joueur qui a créé la partie :</p>
+    <input type="text" id="inputCode" placeholder="Ex: 973112" maxlength="6" oninput="verifierCode()" />
+    <br>
+    <button class="btn-valider" id="boutonRejoindre" onclick="goToScenario()" disabled>Valider</button>
+  </div>
 
   <script>
     const redirectionMap = {
@@ -98,6 +162,19 @@
       "987433": "aa39.html", "309008": "aa39.html", "387497": "aa39.html", "770948": "aa39.html",
       "141056": "aa40.html", "395123": "aa40.html", "097758": "aa40.html", "306389": "aa40.html"
     };
+
+    function afficherSectionCode() {
+      setTimeout(function() {
+        document.getElementById("codeSection").scrollIntoView({ behavior: 'smooth' });
+      }, 200);
+      document.getElementById("codeSection").style.display = "block";
+    }
+
+    function verifierCode() {
+      const code = document.getElementById("inputCode").value;
+      const bouton = document.getElementById("boutonRejoindre");
+      bouton.disabled = !/^[0-9]{6}$/.test(code);
+    }
 
     function goToScenario() {
       const code = document.getElementById("inputCode").value.trim();
