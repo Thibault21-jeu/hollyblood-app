@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <title>HollyBlood by Secrets Obscurs</title>
-  <link rel="stylesheet" href="style.css">
   <style>
     body {
       background-color: #0e0e0e;
@@ -16,15 +15,6 @@
     #logo {
       max-width: 320px;
       margin-bottom: 25px;
-    }
-
-    .intro {
-      font-size: 1.2em;
-      color: #dddddd;
-      font-style: italic;
-      max-width: 600px;
-      margin: 0 auto 30px auto;
-      text-align: justify;
     }
 
     .ticket-container {
@@ -100,19 +90,6 @@
 
   <img src="img/logo.png" alt="Logo du jeu" id="logo">
 
-  <p class="intro">
-    Bienvenue dans les coulisses de <strong>HollyBlood</strong>.<br><br>
-    Le premier joueur incarne le Meurtrier. Il clique sur <strong>Créer une partie</strong> pour définir son mobile et déclencher l’histoire en générant un code secret.<br><br>
-    Les autres joueurs cliquent sur <strong>Rejoindre une partie</strong>, entrent ce code, et découvrent leur rôle… sans savoir qui ils doivent démasquer.<br><br>
-    <em>Silence… ça tourne.</em>
-  </p>
-    Le destin d’un meurtre repose entre vos mains.  
-    Le premier joueur doit cliquer sur <strong>Créer une partie</strong> pour déclencher le scénario et générer un code unique pour cette partie.  
-    Les autres protagonistes cliquent sur <strong>Rejoindre une partie</strong> et entrent ce code pour pénétrer dans l’histoire…  
-    <br><br>
-    <em>Le rideau ne se lèvera que lorsque tous les rôles auront trouvé leur interprète.</em>
-  </p>
-
   <div class="ticket-container">
     <img src="img/ticket-creer-partie.png" alt="Créer une partie" class="ticket-btn" onclick="creerPartie()">
     <img src="img/ticket-rejoindre-partie.png" alt="Rejoindre une partie" class="ticket-btn" onclick="afficherSectionCode()">
@@ -125,68 +102,72 @@
     <button class="btn-valider" id="boutonRejoindre" onclick="rejoindrePartie()" disabled>Valider</button>
   </div>
 
-  <!-- Firebase -->
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-database-compat.js"></script>
-
   <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAyxLuqhf9kXRUYc-w2rESe6ETGVzr5mPM",
-      authDomain: "hollyblood-91a3c.firebaseapp.com",
-      databaseURL: "https://hollyblood-91a3c-default-rtdb.europe-west1.firebasedatabase.app",
-      projectId: "hollyblood-91a3c",
-      storageBucket: "hollyblood-91a3c.appspot.com",
-      messagingSenderId: "930359065857",
-      appId: "1:930359065857:web:1258520c6b2915a646ef00"
+    const redirectionMap = {
+      "973112": "aa1", "207217": "aa1", "992972": "aa1", "146018": "aa1",
+      "271906": "aa2", "897499": "aa2", "821951": "aa2", "317065": "aa2",
+      "729490": "aa3", "545777": "aa3", "196387": "aa3", "805894": "aa3",
+      "012074": "aa4", "923621": "aa4", "304099": "aa4", "537769": "aa4",
+      "226512": "aa5", "229143": "aa5", "163676": "aa5", "116338": "aa5",
+      "873233": "aa6", "837619": "aa6", "270346": "aa6", "528814": "aa6",
+      "474279": "aa7", "423343": "aa7", "716320": "aa7", "431457": "aa7",
+      "148607": "aa8", "365064": "aa8", "960473": "aa8", "203675": "aa8",
+      "289705": "aa9", "148714": "aa9", "519341": "aa9", "583571": "aa9",
+      "912632": "aa10", "377054": "aa10", "634609": "aa10", "617621": "aa10",
+      "446423": "aa11", "869002": "aa11", "027894": "aa11", "884271": "aa11",
+      "871574": "aa12", "953606": "aa12", "275533": "aa12", "244871": "aa12",
+      "010381": "aa13", "332969": "aa13", "280018": "aa13", "208960": "aa13",
+      "929575": "aa14", "657062": "aa14", "657252": "aa14", "069246": "aa14",
+      "928101": "aa15", "533428": "aa15", "018753": "aa15", "947543": "aa15",
+      "962060": "aa16", "696192": "aa16", "791616": "aa16", "037936": "aa16",
+      "946602": "aa17", "091011": "aa17", "076825": "aa17", "194288": "aa17",
+      "924976": "aa18", "755417": "aa18", "859056": "aa18", "345629": "aa18",
+      "847102": "aa19", "133796": "aa19", "544879": "aa19", "806465": "aa19",
+      "509122": "aa20", "221941": "aa20", "872539": "aa20", "660914": "aa20",
+      "391514": "aa21", "657090": "aa21", "467853": "aa21", "278465": "aa21",
+      "851597": "aa22", "624568": "aa22", "284688": "aa22", "032123": "aa22",
+      "787050": "aa23", "775655": "aa23", "969411": "aa23", "018453": "aa23",
+      "856059": "aa24", "384803": "aa24", "166988": "aa24", "722011": "aa24",
+      "907044": "aa25", "812727": "aa25", "627446": "aa25", "120543": "aa25",
+      "065042": "aa26", "936829": "aa26", "506390": "aa26", "192944": "aa26",
+      "315168": "aa27", "358326": "aa27", "236399": "aa27", "492881": "aa27",
+      "007182": "aa28", "393868": "aa28", "978142": "aa28", "190817": "aa28",
+      "613441": "aa29", "214614": "aa29", "683961": "aa29", "319842": "aa29",
+      "123016": "aa30", "156221": "aa30", "457538": "aa30", "600479": "aa30",
+      "074530": "aa31", "322786": "aa31", "041980": "aa31", "481802": "aa31",
+      "111147": "aa32", "921809": "aa32", "384140": "aa32", "132120": "aa32",
+      "806410": "aa33", "183616": "aa33", "314301": "aa33", "808160": "aa33",
+      "432106": "aa34", "563873": "aa34", "247241": "aa34", "719478": "aa34",
+      "517016": "aa35", "822232": "aa35", "522760": "aa35", "007519": "aa35",
+      "790206": "aa36", "641632": "aa36", "950834": "aa36", "710522": "aa36",
+      "866511": "aa37", "070453": "aa37", "407333": "aa37", "449127": "aa37",
+      "391834": "aa38", "072287": "aa38", "098996": "aa38", "334439": "aa38",
+      "987433": "aa39", "309008": "aa39", "387497": "aa39", "770948": "aa39",
+      "141056": "aa40", "395123": "aa40", "097758": "aa40", "306389": "aa40"
     };
 
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.database();
-
-    function genererCodePartie() {
-      return Math.floor(100000 + Math.random() * 900000);
-    }
-
     function creerPartie() {
-      const scenar = "Hollywood Confidentiel";
-      const code = genererCodePartie();
-
-      db.ref("parties/" + code).set({
-        scenar: scenar,
-        createur: true,
-        joueurs: {}
-      }).then(() => {
-        window.location.href = `page1-joueur.html?code=${code}`;
-      }).catch((error) => {
-        alert("Erreur lors de la création : " + error.message);
-      });
+      window.location.href = "creer-partie.html";
     }
 
     function afficherSectionCode() {
-      setTimeout(function() {
+      document.getElementById("codeSection").style.display = "block";
+      setTimeout(() => {
         document.getElementById("codeSection").scrollIntoView({ behavior: 'smooth' });
       }, 200);
-      document.getElementById("codeSection").style.display = "block";
     }
 
     function verifierCode() {
-      const code = document.getElementById("codePartie").value;
-      const bouton = document.getElementById("boutonRejoindre");
-      bouton.disabled = !/^\d{6}$/.test(code);
+      const code = document.getElementById("codePartie").value.trim();
+      document.getElementById("boutonRejoindre").disabled = !/^\d{6}$/.test(code);
     }
 
     function rejoindrePartie() {
-      const code = document.getElementById("codePartie").value;
-
-      if (code === "000000") {
-        window.location.href = "admin.html";
-        return;
-      }
-
-      if (/^\d{6}$/.test(code)) {
-        window.location.href = `page2-joueur2.html?code=${code}`;
+      const code = document.getElementById("codePartie").value.trim();
+      if (redirectionMap[code]) {
+        window.location.href = "https://secretsobscursjeux.wixsite.com/hollyblood/" + redirectionMap[code];
       } else {
-        alert("Merci d’entrer un code à 6 chiffres.");
+        alert("Ce code ne correspond à aucun scénario connu.");
       }
     }
   </script>
