@@ -33,6 +33,8 @@
     }
 
     .btn {
+      display: block;
+      margin: 6px auto;
       padding: 14px 28px;
       font-size: 1.1em;
       background-color: #e50914;
@@ -42,7 +44,6 @@
       cursor: pointer;
       transition: background-color 0.3s, transform 0.2s;
       font-family: 'Georgia', serif;
-      margin: 10px;
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
     }
 
@@ -53,37 +54,52 @@
 
     #indiceContainer, #accusationContainer {
       max-width: 700px;
-      margin: 20px auto;
+      margin: 20px auto 30px auto;
       padding: 20px;
       border: 1px solid #444;
       background-color: #1e1e1e;
       border-radius: 10px;
-      display: none;
       text-align: left;
+      overflow: hidden;
+      height: 0;
+      opacity: 0;
+      transition: all 0.4s ease;
+    }
+
+    .show {
+      height: auto;
+      opacity: 1;
+      padding: 20px;
     }
 
     .character-list, .mobile-list {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-      margin: 20px 0;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 15px;
+      max-width: 600px;
+      margin: 20px auto;
     }
 
     .choice-btn {
-      background-color: #333;
+      background-color: #8B0000;
       color: white;
-      border: 1px solid #666;
-      padding: 10px 16px;
-      border-radius: 8px;
-      cursor: pointer;
+      border: none;
+      padding: 14px 20px;
+      font-size: 1em;
       font-family: 'Georgia', serif;
-      font-size: 0.95em;
+      border-radius: 10px;
+      cursor: pointer;
       transition: background-color 0.3s;
+      width: 100%;
     }
 
-    .choice-btn:hover {
-      background-color: #e50914;
+    .choice-btn:hover:not(:disabled) {
+      background-color: #aa0000;
+    }
+
+    .choice-btn:disabled {
+      background-color: #444;
+      cursor: not-allowed;
     }
 
     .selected {
@@ -100,8 +116,7 @@
     Une ambiance électrique règne dans les coulisses... Les projecteurs n’éclairent plus que les doutes, et le sang d’un(e) artiste a été versé. Qui, parmi vous, joue un double jeu ?
   </div>
 
-  <button class="btn" onclick="toggleIndices()">🔎 Voir les indices</button>
-  <button class="btn" onclick="toggleAccusation()">⚠️ Accuser un joueur</button>
+  <button class="btn" onclick="toggleBox('indiceContainer')">🔎 Voir les indices</button>
 
   <div id="indiceContainer">
     <h3>Indices disponibles :</h3>
@@ -111,6 +126,10 @@
       <li>Un mot de menace anonyme a été découvert, écrit sur un programme.</li>
     </ul>
   </div>
+
+  <button class="btn" onclick="toggleBox('accusationContainer')">
+    📣 Accuser le meurtrier<br><small>Faites éclater la vérité.</small>
+  </button>
 
   <div id="accusationContainer">
     <p><strong>⚠️ Attention : une accusation met fin à la partie.</strong><br>
@@ -143,14 +162,11 @@
   </div>
 
   <script>
-    function toggleIndices() {
-      const box = document.getElementById("indiceContainer");
-      box.style.display = (box.style.display === "none") ? "block" : "none";
-    }
-
-    function toggleAccusation() {
-      const box = document.getElementById("accusationContainer");
-      box.style.display = (box.style.display === "none") ? "block" : "none";
+    function toggleBox(id) {
+      const box = document.getElementById(id);
+      const otherBox = id === 'indiceContainer' ? document.getElementById('accusationContainer') : document.getElementById('indiceContainer');
+      otherBox.classList.remove('show');
+      box.classList.toggle('show');
     }
 
     function selectChoice(btn, group) {
