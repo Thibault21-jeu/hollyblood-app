@@ -53,24 +53,23 @@
     }
 
     #indiceContainer, #accusationContainer {
-      max-width: 700px;
-      margin: 20px auto 30px auto;
-      padding: 20px;
-      border: 1px solid #444;
-      background-color: #1e1e1e;
-      border-radius: 10px;
-      text-align: left;
-      overflow: hidden;
-      height: 0;
-      opacity: 0;
-      transition: all 0.4s ease;
-    }
+  max-width: 700px;
+  margin: 20px auto 30px auto;
+  border: 1px solid #444;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  text-align: left;
+  max-height: 0;
+  opacity: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+}
 
     .show {
-      height: auto;
-      opacity: 1;
-      padding: 20px;
-    }
+  max-height: 1500px;
+  opacity: 1;
+  padding: 20px;
+}
 
     .character-list, .mobile-list {
       display: grid;
@@ -163,35 +162,17 @@
 
   <script>
     function toggleBox(id) {
-      const box = document.getElementById(id);
-      const otherBox = id === 'indiceContainer' ? document.getElementById('accusationContainer') : document.getElementById('indiceContainer');
-      otherBox.classList.remove('show');
-      box.classList.toggle('show');
-    }
+  const box = document.getElementById(id);
+  const otherBox = id === 'indiceContainer' ? document.getElementById('accusationContainer') : document.getElementById('indiceContainer');
 
-    function selectChoice(btn, group) {
-      const buttons = document.querySelectorAll(`.choice-btn`);
-      buttons.forEach(b => {
-        if (b.textContent === btn.textContent) {
-          b.classList.toggle('selected');
-        } else if (group === 'personnage' && b.parentElement.classList.contains('character-list')) {
-          b.classList.remove('selected');
-        } else if (group === 'mobile' && b.parentElement.classList.contains('mobile-list')) {
-          b.classList.remove('selected');
-        }
-      });
-    }
+  // Fermer l'autre boîte
+  if (otherBox !== box) {
+    otherBox.classList.remove('show');
+  }
 
-    function confirmerAccusation() {
-      const selectedPerso = document.querySelector('.character-list .selected');
-      const selectedMobile = document.querySelector('.mobile-list .selected');
-
-      if (selectedPerso && selectedMobile) {
-        alert(`Vous accusez ${selectedPerso.textContent} pour le mobile : ${selectedMobile.textContent} \nL'accusation est lancée !`);
-      } else {
-        alert("Merci de sélectionner un personnage ET un mobile avant de confirmer l'accusation.");
-      }
-    }
+  // Toggle celle qu'on clique
+  box.classList.toggle('show');
+}
   </script>
 
 </body>
