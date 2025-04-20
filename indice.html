@@ -156,7 +156,7 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const scenario = params.get("scenar") || "AA1";
+    const scenario = (params.get("scenar") || "aa1").toLowerCase(); // ✅ En minuscule
     document.getElementById("scenarioNom").textContent = scenario;
 
     function toggleAide() {
