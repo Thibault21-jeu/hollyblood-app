@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Scanner un indice | HollyBlood</title>
   <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
   <style>
@@ -13,103 +13,43 @@
       padding: 2em;
       position: relative;
     }
-    h1 {
-      font-size: 2.5em;
-      margin-bottom: 0.2em;
-    }
-    p {
-      font-size: 1.2em;
-      color: #ccc;
-      margin-bottom: 2em;
-    }
+    h1 { font-size: 2.5em; margin-bottom: 0.2em; }
+    p { font-size: 1.2em; color: #ccc; margin-bottom: 2em; }
     button {
-      background-color: #ff0000;
-      color: white;
-      border: none;
-      padding: 1em 2em;
-      font-size: 1.2em;
-      border-radius: 8px;
-      cursor: pointer;
-      margin: 1em 0.5em;
-      box-shadow: 0 0 10px #ff0000;
+      background-color: #ff0000; color: white; border: none;
+      padding: 1em 2em; font-size: 1.2em; border-radius: 8px;
+      cursor: pointer; margin: 1em 0.5em; box-shadow: 0 0 10px #ff0000;
       transition: transform 0.2s ease, background-color 0.3s ease;
     }
-    button:hover {
-      transform: scale(1.05);
-      background-color: #cc0000;
-    }
+    button:hover { transform: scale(1.05); background-color: #cc0000; }
     .aide {
-      background-color: #1f1f1f;
-      border: 1px solid #333;
-      padding: 1.5em;
-      margin-top: 2em;
-      width: 90%;
-      max-width: 650px;
-      display: none;
-      border-radius: 10px;
-      text-align: left;
-      color: #ddd;
-      margin-left: auto;
-      margin-right: auto;
+      background-color: #1f1f1f; border: 1px solid #333;
+      padding: 1.5em; margin-top: 2em; width: 90%; max-width: 650px;
+      display: none; border-radius: 10px; text-align: left; color: #ddd;
+      margin-left: auto; margin-right: auto;
     }
     select {
-      width: 100%;
-      max-width: 400px;
-      padding: 0.7em;
-      font-size: 1em;
-      background-color: #222;
-      color: #fff;
-      border: 1px solid #555;
-      border-radius: 6px;
-      margin: 0.5em 0 1em;
-      appearance: none;
+      width: 100%; max-width: 400px; padding: 0.7em; font-size: 1em;
+      background-color: #222; color: #fff; border: 1px solid #555;
+      border-radius: 6px; margin: 0.5em 0 1em;
     }
-    select:focus {
-      outline: none;
-      border-color: #ff0000;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 1em;
-      display: block;
-    }
+    select:focus { outline: none; border-color: #ff0000; }
+    label { font-weight: bold; margin-top: 1em; display: block; }
     #indiceAffiche {
-      margin-top: 3em;
-      font-size: 1.4em;
-      background-color: #222;
-      padding: 1.5em;
-      border-radius: 10px;
-      max-width: 650px;
-      margin-left: auto;
-      margin-right: auto;
-      box-shadow: 0 0 20px #ff0000;
-      color: #0f0;
-      display: none;
+      margin-top: 3em; font-size: 1.4em; background-color: #222;
+      padding: 1.5em; border-radius: 10px; max-width: 650px;
+      margin-left: auto; margin-right: auto; box-shadow: 0 0 20px #ff0000;
+      color: #0f0; display: none;
     }
     #btnAide {
-      position: fixed;
-      bottom: 30px;
-      right: 30px;
-      background-color: #444;
-      color: white;
-      font-size: 1.8em;
-      padding: 0.4em 0.7em;
-      border-radius: 50%;
-      cursor: pointer;
-      border: none;
-      box-shadow: 0 0 10px #000;
+      position: fixed; bottom: 30px; right: 30px;
+      background-color: #444; color: white; font-size: 1.8em;
+      padding: 0.4em 0.7em; border-radius: 50%; cursor: pointer;
+      border: none; box-shadow: 0 0 10px #000;
     }
-    #btnAide:hover {
-      background-color: #666;
-    }
-    .btn-retour {
-      margin-top: 3em;
-    }
-    #reader {
-      width: 300px;
-      margin: 2em auto;
-      display: none;
-    }
+    #btnAide:hover { background-color: #666; }
+    .btn-retour { margin-top: 3em; }
+    #reader { width: 300px; margin: 2em auto; display: none; }
   </style>
 </head>
 <body>
@@ -117,13 +57,14 @@
   <p>Scénario en cours : <strong id="scenarioNom">...</strong></p>
   <p>Scanne ta carte fouille pour révéler un indice dans cette pièce.</p>
 
-  <button onclick="demarrerQrCode()">📸 Scanner ma carte fouille</button>
-
+  <button id="btnScanQR" onclick="demarrerQrCode()">📸 Scanner ma carte fouille</button>
   <div id="reader"></div>
+  <div id="niveauResult" style="font-size: 1.5em; margin-top: 1em;"></div>
+
+  <button id="btnNFC" onclick="demarrerNFC()" style="display:none;">📱 Déclenchez la fouille de la pièce avec votre téléphone</button>
 
   <div class="aide" id="aideBloc">
     <p><strong>⚠️ Si le scan ne fonctionne pas :</strong></p>
-
     <label for="pieceSelect">1. Choisissez la pièce que vous fouillez :</label>
     <select id="pieceSelect">
       <option value="">-- Sélectionner une pièce --</option>
@@ -156,8 +97,10 @@
 
   <script>
     const params = new URLSearchParams(window.location.search);
-    const scenario = (params.get("scenar") || "aa1").toLowerCase(); // ✅ En minuscule
+    const scenario = (params.get("scenar") || "aa1").toLowerCase();
     document.getElementById("scenarioNom").textContent = scenario;
+
+    let niveauIndice = null;
 
     function toggleAide() {
       const bloc = document.getElementById("aideBloc");
@@ -197,28 +140,56 @@
     function demarrerQrCode() {
       document.getElementById("reader").style.display = "block";
       const html5QrCode = new Html5Qrcode("reader");
+
       html5QrCode.start(
         { facingMode: "environment" },
-        {
-          fps: 10,
-          qrbox: 250
-        },
-        (decodedText, decodedResult) => {
+        { fps: 10, qrbox: 250 },
+        (decodedText) => {
           html5QrCode.stop();
           document.getElementById("reader").style.display = "none";
+          document.getElementById("btnScanQR").style.display = "none";
+
           const niveau = decoderNiveau(decodedText);
           if (!niveau) {
             alert("QR code non reconnu. Niveau introuvable.");
             return;
           }
-          const piece = prompt("Scannez ou entrez la pièce fouillée (ex : Loge_des_acteurs)")?.replaceAll(" ", "_");
-          if (!piece) return;
-          afficherIndice(`${scenario}_${piece}_${niveau}.png`);
+
+          niveauIndice = niveau;
+          document.getElementById("niveauResult").textContent = `🔍 Indice ${niveauIndice}`;
+          document.getElementById("btnNFC").style.display = "inline-block";
         },
-        (errorMessage) => {
-          // console.log(`Erreur de scan : ${errorMessage}`);
-        }
+        (error) => {}
       );
+    }
+
+    function demarrerNFC() {
+      if (!("NDEFReader" in window)) {
+        alert("La lecture NFC n’est pas disponible sur cet appareil.");
+        return;
+      }
+
+      const reader = new NDEFReader();
+      reader.scan().then(() => {
+        reader.onreading = (event) => {
+          const message = event.message;
+          let piece = null;
+          for (const record of message.records) {
+            if (record.recordType === "text") {
+              const textDecoder = new TextDecoder(record.encoding);
+              piece = textDecoder.decode(record.data);
+              break;
+            }
+          }
+          if (piece && niveauIndice) {
+            afficherIndice(`${scenario}_${piece}_${niveauIndice}.png`);
+          } else {
+            alert("Échec de la lecture de la puce NFC.");
+          }
+        };
+      }).catch((error) => {
+        alert("Erreur NFC : " + error);
+      });
     }
   </script>
 </body>
