@@ -134,6 +134,16 @@
       font-style: italic;
       margin: 20px auto 10px;
     }
+
+    #videoResult {
+      display: none;
+      margin: 20px auto;
+      max-width: 700px;
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+    }
   </style>
 </head>
 <body>
@@ -199,7 +209,10 @@
     </div>
   </div>
 
-  <div class="final-message" id="resultMessage"></div>
+  <div id="videoResult">
+    <video id="resultVideo" width="100%" controls></video>
+  </div>
+
   <div class="final-message" id="revealMessage" style="display:none;">
     <h2>🎭 Révélation finale</h2>
     <p>
@@ -209,6 +222,7 @@
     </p>
     <button class="btn" onclick="window.location.href='index.html'">🚪 Quitter la partie</button>
   </div>
+
   <div id="revealBtnBox" style="display:none;">
     <button class="btn" onclick="afficherRevelation()">🎭 Révélation finale</button>
   </div>
@@ -268,20 +282,19 @@
       document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
       document.getElementById('btnAccuser').disabled = true;
 
-      const messageBox = document.getElementById("resultMessage");
-      let message = "";
+      const success = selectedPerso === vraiPerso && selectedMobile === vraiMobile;
+      const video = document.getElementById("resultVideo");
+      const container = document.getElementById("videoResult");
 
-      if (selectedPerso === vraiPerso && selectedMobile === vraiMobile) {
-        message = "<h2>🎉 Bravo !</h2><p>Silence sur le plateau… Votre flair ne vous a pas trahi...<br>Le meurtrier est découvert ! L’affaire est résolue. Le coupable est démasqué… et le rideau tombe.</p>";
-      } else {
-        message = "<h2>❌ Faux pas...</h2><p>Silence sur le plateau… Erreur de casting...<br>Vous accusez à tort… et votre dernière scène s’achève. Le meurtrier, lui, prolonge la mascarade.</p>";
-      }
+      video.src = success ? "videos/gagnee.mp4" : "videos/perdue.mp4";
+      container.style.display = "block";
+      video.scrollIntoView({ behavior: 'smooth' });
+      video.play();
 
-      messageBox.innerHTML = message;
-      messageBox.style.display = 'block';
-      messageBox.scrollIntoView({ behavior: 'smooth' });
-
-      document.getElementById("revealBtnBox").style.display = "block";
+      video.onended = () => {
+        document.getElementById("revealBtnBox").style.display = "block";
+        document.getElementById("revealBtnBox").scrollIntoView({ behavior: 'smooth' });
+      };
     }
 
     function afficherRevelation() {
