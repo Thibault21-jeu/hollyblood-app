@@ -60,6 +60,8 @@
       max-width: 320px;
       margin-left: auto;
       margin-right: auto;
+      text-decoration: none;
+      display: inline-block;
     }
 
     .accordion-header:hover {
@@ -170,12 +172,7 @@
   <button class="btn" id="revoirVideoBtn" onclick="toggleVideoBox()" style="display:none;">🎬 Revoir la vidéo d’introduction</button>
 
   <div class="accordion-box">
-    <div class="accordion-header" onclick="toggleExclusiveBox('indiceContent')">🔎 Voir les indices</div>
-    <div id="indiceContent" class="accordion-content">
-      <p>Indice 1 : Un contrat a mystérieusement disparu des archives du studio.<br>
-         Indice 2 : Camille avait découvert un pot-de-vin sur le tournage.<br>
-         Indice 3 : Le coffre de la loge montre des traces de forçage…</p>
-    </div>
+    <a href="#" onclick="allerVersIndice()" class="accordion-header">🔎 Voir les indices</a>
   </div>
 
   <div class="accordion-box">
@@ -231,6 +228,20 @@
     const vraiPerso = "L'Agent de Sécurité";
     const vraiMobile = "Avidité";
 
+    window.addEventListener("DOMContentLoaded", () => {
+      const retour = sessionStorage.getItem("retourDepuisIndice");
+      if (retour === "true") {
+        document.getElementById("videoBox").classList.add("hidden");
+        document.getElementById("revoirVideoBtn").style.display = "inline-block";
+        sessionStorage.removeItem("retourDepuisIndice");
+      }
+    });
+
+    function allerVersIndice() {
+      sessionStorage.setItem("retourDepuisIndice", "true");
+      window.location.href = "indice.html?scenar=AA1";
+    }
+
     function toggleVideoBox() {
       const box = document.getElementById('videoBox');
       const revoir = document.getElementById('revoirVideoBtn');
@@ -245,7 +256,7 @@
     }
 
     function toggleExclusiveBox(idToShow) {
-      const boxes = ['indiceContent', 'accusationContainer'];
+      const boxes = ['accusationContainer'];
       boxes.forEach(id => {
         const el = document.getElementById(id);
         if (id === idToShow) {
