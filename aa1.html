@@ -163,14 +163,12 @@
       <strong>À vous de découvrir le meurtrier.</strong>
     </p>
     <div style="margin-top:20px;">
-      <video width="100%" controls autoplay>
+      <video id="introVideo" width="100%" controls>
         <source src="videos/intro.mp4" type="video/mp4">
-        <track src="videos/intro.vtt" kind="subtitles" srclang="fr" label="Français" default>
         Votre navigateur ne supporte pas la vidéo.
       </video>
     </div>
   </div>
-
   <button class="btn" id="revoirVideoBtn" onclick="toggleVideoBox()" style="display:none;">🎬 Revoir la vidéo d’introduction</button>
 
   <div class="accordion-box">
@@ -215,9 +213,11 @@
   <div class="final-message" id="revealMessage" style="display:none;">
     <h2>🎭 Révélation finale</h2>
     <p>
-      Camille avait découvert que l’Agent de Sécurité falsifiait des documents pour détourner de l’argent au sein du studio. <br>
-      Poussé par l’avidité, il l’a fait taire avant que Camille ne dévoile tout. <br>
-      Ce crime maquillé en accident n’était qu’un écran de fumée…
+      Camille portait une montre de luxe d’une valeur indécente. <br>
+      L’agent de sécurité, fauché, savait comment la récupérer sans se faire remarquer. <br>
+      Mais Camille s’en est aperçu et a menacé d’en parler. <br>
+      Impossible de tout perdre maintenant. <br>
+      Alors le silence a été acheté… par la force.
     </p>
     <button class="btn" onclick="window.location.href='index.html'">🚪 Quitter la partie</button>
   </div>
@@ -232,16 +232,20 @@
 
     window.addEventListener("DOMContentLoaded", () => {
       const retour = sessionStorage.getItem("retourDepuisIndice");
+      const introVideo = document.getElementById("introVideo");
+
       if (retour === "true") {
         document.getElementById("videoBox").classList.add("hidden");
         document.getElementById("revoirVideoBtn").style.display = "inline-block";
         sessionStorage.removeItem("retourDepuisIndice");
+      } else {
+        introVideo.play();
       }
     });
 
     function allerVersIndice() {
       sessionStorage.setItem("retourDepuisIndice", "true");
-      window.location.href = "indice.html?scenar=AA1";
+      window.location.href = "indice.html?scenar=aa1";
     }
 
     function toggleVideoBox() {

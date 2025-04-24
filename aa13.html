@@ -1,44 +1,323 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <title>Scénario AA13 - HollyBlood</title>
+  <meta charset="UTF-8" />
+  <title>Scène AA13 - HollyBlood</title>
   <style>
     body {
       background-color: #0e0e0e;
       color: white;
       font-family: 'Georgia', serif;
+      padding: 30px 20px;
       text-align: center;
-      padding: 40px;
     }
-    h1 {
-      font-size: 36px;
+
+    #logo {
+      max-width: 180px;
+      margin-bottom: 10px;
+    }
+
+    .scene-id {
+      font-size: 0.9em;
+      color: #888;
       margin-bottom: 20px;
     }
-    p {
-      font-size: 20px;
-      color: #cccccc;
+
+    .intro-video-box, .accordion-box, .final-message {
+      background-color: #1a1a1a;
+      border-radius: 10px;
+      padding: 20px;
+      margin: 0 auto 20px;
+      max-width: 700px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+      position: relative;
     }
-    .btn {
-      background-color: #e50914;
+
+    .hidden {
+      display: none !important;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: transparent;
       color: white;
-      padding: 12px 24px;
       border: none;
-      border-radius: 8px;
-      font-size: 16px;
+      font-size: 26px;
       cursor: pointer;
-      margin-top: 30px;
     }
-    .btn:hover {
-      background-color: #ff3333;
+
+    .accordion-header {
+      font-size: 1.1em;
+      cursor: pointer;
+      background-color: #8B0000;
+      padding: 14px 20px;
+      border-radius: 10px;
+      color: white;
+      margin-bottom: 10px;
+      transition: background-color 0.3s ease;
+      max-width: 320px;
+      margin-left: auto;
+      margin-right: auto;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    .accordion-header:hover {
+      background-color: #aa0000;
+    }
+
+    .accordion-content {
+      display: none;
+      margin-top: 15px;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    .visible {
+      display: block !important;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .choice-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-width: 500px;
+      margin: 20px auto;
+    }
+
+    .choice-btn {
+      background-color: #8B0000;
+      color: white;
+      border: none;
+      padding: 14px 20px;
+      font-size: 1em;
+      font-family: 'Georgia', serif;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    .choice-btn:hover {
+      background-color: #aa0000;
+    }
+
+    .choice-btn.selected {
+      background-color: #FFD700;
+      color: #000;
+    }
+
+    .btn {
+      margin: 10px auto;
+      padding: 14px 20px;
+      font-size: 1em;
+      background-color: #8B0000;
+      color: white;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Georgia', serif;
+      display: block;
+      max-width: 320px;
+    }
+
+    .final-message {
+      display: none;
+    }
+
+    .section-separator {
+      font-size: 1em;
+      color: #ccc;
+      font-style: italic;
+      margin: 20px auto 10px;
+    }
+
+    #videoResult {
+      display: none;
+      margin: 20px auto;
+      max-width: 700px;
+      background-color: #1a1a1a;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
     }
   </style>
 </head>
 <body>
-  <h1>Scénario AA13</h1>
-  <p>Vous avez accédé à la scène du crime...
-     <br>Ce scénario est lié au code secret que vous avez reçu.
-  </p>
-  <button class="btn" onclick="window.location.href='index.html'">↩️ Retour à l’accueil</button>
+  <img src="img/logo.png" id="logo" alt="Logo HollyBlood">
+  <div class="scene-id">Scène AA13</div>
+
+  <div class="intro-video-box" id="videoBox">
+    <button class="close-btn" onclick="toggleVideoBox()">×</button>
+    <p>
+      À Hollywood, la gloire est éphémère.<br>
+      Ce matin, les flashs éclairent un drame.<br>
+      Camille, étoile montante… retrouvée sans vie.<br>
+      Quelqu’un voulait sa chute. Et ce quelqu’un… a frappé.<br>
+      Qui cache la vérité ?<br>
+      <strong>À vous de découvrir le meurtrier.</strong>
+    </p>
+    <div style="margin-top:20px;">
+      <video id="introVideo" width="100%" controls>
+        <source src="videos/intro.mp4" type="video/mp4">
+        Votre navigateur ne supporte pas la vidéo.
+      </video>
+    </div>
+  </div>
+  <button class="btn" id="revoirVideoBtn" onclick="toggleVideoBox()" style="display:none;">🎬 Revoir la vidéo d’introduction</button>
+
+  <div class="accordion-box">
+    <a href="#" onclick="allerVersIndice()" class="accordion-header">🔎 Voir les indices</a>
+  </div>
+
+  <div class="accordion-box">
+    <div class="accordion-header" onclick="toggleExclusiveBox('accusationContainer')">
+      <div>📣 Accuser le meurtrier</div>
+      <div style="font-size: 0.85em; font-style: italic;">Faites éclater la vérité</div>
+    </div>
+    <div id="accusationContainer" class="accordion-content">
+      <p style="color: white; font-style: italic;">Sélectionnez un personnage et un mobile pour accuser. 👇</p>
+      <div class="section-separator">Choisissez un personnage :</div>
+      <div class="choice-grid" id="persoChoices">
+        <button class="choice-btn" onclick="selectPerso(this)">L'Agent de Sécurité</button>
+        <button class="choice-btn" onclick="selectPerso(this)">L’Assistante de Production</button>
+        <button class="choice-btn" onclick="selectPerso(this)">L’Avocate des Stars</button>
+        <button class="choice-btn" onclick="selectPerso(this)">La Chroniqueuse Mondaine</button>
+        <button class="choice-btn" onclick="selectPerso(this)">La Figurante</button>
+        <button class="choice-btn" onclick="selectPerso(this)">La Maquilleuse de Stars</button>
+        <button class="choice-btn" onclick="selectPerso(this)">Le Paparazzi</button>
+        <button class="choice-btn" onclick="selectPerso(this)">Le Producteur</button>
+        <button class="choice-btn" onclick="selectPerso(this)">Le Réalisateur</button>
+        <button class="choice-btn" onclick="selectPerso(this)">Le Scénariste</button>
+      </div>
+      <div class="section-separator">Quel était son mobile ?</div>
+      <div class="choice-grid" id="mobileChoices">
+        <button class="choice-btn" onclick="selectMobile(this)">Avidité</button>
+        <button class="choice-btn" onclick="selectMobile(this)">Passion & Jalousie</button>
+        <button class="choice-btn" onclick="selectMobile(this)">Protection d’un secret</button>
+        <button class="choice-btn" onclick="selectMobile(this)">Vengeance personnelle</button>
+      </div>
+      <button class="btn" id="btnAccuser" onclick="confirmerAccusation()">✅ Confirmer l'accusation</button>
+    </div>
+  </div>
+
+  <div id="videoResult">
+    <video id="resultVideo" width="100%" controls></video>
+  </div>
+
+  <div class="final-message" id="revealMessage" style="display:none;">
+    <h2>🎭 Révélation finale</h2>
+    <p>
+      Camille demandait toujours à l’avocate de régler ses affaires personnelles. <br>
+      Des échanges tardifs, des rendez-vous hors horaires, une proximité troublante. <br>
+      L’avocate a cru que tout cela voulait dire quelque chose. <br>
+      Puis Camille a tout ignoré, comme si rien n’avait compté. <br>
+      Le vide a été insupportable.
+    </p>
+    <button class="btn" onclick="window.location.href='index.html'">🚪 Quitter la partie</button>
+  </div>
+
+  <div id="revealBtnBox" style="display:none;">
+    <button class="btn" onclick="afficherRevelation()">🎭 Révélation finale</button>
+  </div>
+
+  <script>
+    const vraiPerso = "L’Avocate des Stars";
+    const vraiMobile = "Passion & Jalousie";
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const retour = sessionStorage.getItem("retourDepuisIndice");
+      const introVideo = document.getElementById("introVideo");
+
+      if (retour === "true") {
+        document.getElementById("videoBox").classList.add("hidden");
+        document.getElementById("revoirVideoBtn").style.display = "inline-block";
+        sessionStorage.removeItem("retourDepuisIndice");
+      } else {
+        introVideo.play();
+      }
+    });
+
+    function allerVersIndice() {
+      sessionStorage.setItem("retourDepuisIndice", "true");
+      window.location.href = "indice.html?scenar=aa13";
+    }
+
+    function toggleVideoBox() {
+      const box = document.getElementById('videoBox');
+      const revoir = document.getElementById('revoirVideoBtn');
+      if (box.classList.contains('hidden')) {
+        box.classList.remove('hidden');
+        revoir.style.display = 'none';
+      } else {
+        box.classList.add('hidden');
+        revoir.style.display = 'inline-block';
+      }
+    }
+
+    function toggleExclusiveBox(idToShow) {
+      const boxes = ['accusationContainer'];
+      boxes.forEach(id => {
+        const el = document.getElementById(id);
+        if (id === idToShow) {
+          el.classList.toggle('visible');
+        } else {
+          el.classList.remove('visible');
+        }
+      });
+      document.getElementById('videoBox').classList.add('hidden');
+      document.getElementById('revoirVideoBtn').style.display = 'inline-block';
+    }
+
+    let selectedPerso = null;
+    let selectedMobile = null;
+
+    function selectPerso(btn) {
+      document.querySelectorAll('#persoChoices .choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedPerso = btn.innerText;
+    }
+
+    function selectMobile(btn) {
+      document.querySelectorAll('#mobileChoices .choice-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      selectedMobile = btn.innerText;
+    }
+
+    function confirmerAccusation() {
+      if (!selectedPerso || !selectedMobile) {
+        alert("Veuillez sélectionner un personnage ET un mobile.");
+        return;
+      }
+
+      document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
+      document.getElementById('btnAccuser').disabled = true;
+
+      const success = selectedPerso === vraiPerso && selectedMobile === vraiMobile;
+      const video = document.getElementById("resultVideo");
+      const container = document.getElementById("videoResult");
+
+      video.src = success ? "videos/gagnee.mp4" : "videos/perdue.mp4";
+      container.style.display = "block";
+      video.scrollIntoView({ behavior: 'smooth' });
+      video.play();
+
+      video.onended = () => {
+        document.getElementById("revealBtnBox").style.display = "block";
+        document.getElementById("revealBtnBox").scrollIntoView({ behavior: 'smooth' });
+      };
+    }
+
+    function afficherRevelation() {
+      document.getElementById("revealMessage").style.display = "block";
+      document.getElementById("revealMessage").scrollIntoView({ behavior: 'smooth' });
+      document.getElementById("revealBtnBox").style.display = "none";
+    }
+  </script>
 </body>
 </html>
